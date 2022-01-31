@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import Gooey from './Gooey';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Gooey 
+      size={400}
+      color="#ddc5c5"
+      btnSize={50}
+      btnColor="#5e5e5e"
+      distance={100}
+      slice={50}
+      startAngle={15}
+      buttons={[
+        {
+          title: "",
+          color: "red",
+        },
+        {
+          title: "",
+          color: "red",
+        },
+        {
+          title: "",
+          color: "red",
+        },
+        {
+          title: "",
+          color: "red",
+        },
+      ]}
+    />
   );
 }
 
