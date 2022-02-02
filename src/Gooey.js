@@ -1,6 +1,9 @@
-import React, { useState, useRef } from"react"
+import React, { useState, useRef, useEffect } from"react"
 
 import { gsap, Quad, Quint, Elastic } from"gsap"
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngle = 0, buttons }){
     const [isOpen, setIsOpen] = useState(false)
@@ -10,58 +13,71 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
     const el = useRef()
     const q = gsap.utils.selector(el)
 
-    const open = () => {
-        setIsOpen(true)
+    const toggle = () => {
 
-        q(".btn").forEach((itm, i) => {
-            gsap.to(itm, {
-                duration: 0.7,
-                delay: i*0.1,
-                x: distance || btnPosition,
-                ease: Quad.easeInOut
-            })
+      gsap.to(q(".icon")[0], {
+        duration: 0.3,
+        force3D: true,
+        rotate: isOpen ? 45 : 0,
+        ease: Quint.easeIn
+      })
+
+      q(".btn").forEach((itm, i) => {
+        gsap.to(itm, {
+            duration: 0.7,
+            delay: i*0.1,
+            force3D: true,
+            x: isOpen ? distance || btnPosition : 0,
+            ease: Quad.easeInOut
         })
+      })
 
-        q(".bounce").forEach((itm, i) => {
-            var t = gsap.timeline({ delay: i*0.1 })
+      q(".bounce").forEach((itm, i) => {
+          var t = gsap.timeline({ delay: i*0.1 })
 
-            t.to(itm, { duration: 0.2, scaleX: 1, scaleY: 1.5, ease: Quad.easeInOut })
-             .to(itm, { duration: 0.15,           scaleY: 1.2, ease: Quad.easeInOut })
-             .to(itm, { duration: 3,              scaleY: 1, ease: Elastic.easeOut.config(1.1, 0.1) })
-        })
+          t.to(itm, { duration: 0.2, scaleX: isOpen ? 1 : 1.3, scaleY: isOpen ? 1.5 : 1,   ease: Quad.easeInOut })
+          .to(itm, { duration: 0.15,                           scaleY: isOpen ? 1.2 : 1.5, ease: Quad.easeInOut })
+          .to(itm, { duration: 3,                              scaleY: isOpen ? 1 : 1.3,   ease: Elastic.easeOut.config(1.1, 0.2) })
+      })
 
     }
 
-    const close = () => {
-        setIsOpen(false)
+    useEffect(() => {
+      toggle()
+    }, [isOpen])
 
-        q(".btn").forEach((itm, i) => {
-            gsap.to(itm, {
-                duration: 0.3,
-                delay: i*0.1,
-                x: 0,
-                ease: Quad.easeInOut
-            })
-        })
+    const mouseUp = () => {
+      gsap.to(q(".icon")[0], {
+        duration: 0.3,
+        force3D: true,
+        scale: 1,
+        ease: Quint.easeOut
+      })
+    }
 
-        q(".bounce").forEach((itm, i) => {
-            var t = gsap.timeline({ delay: i*0.1 })
+    const mouseDown = () => {
+      setIsOpen((prev) => !prev)
 
-            t.to(itm, { duration: 0.2, scaleX: 1.3, scaleY: 1, ease: Quad.easeInOut })
-             .to(itm, { duration: 0.15,             scaleY: 1.5, ease: Quad.easeInOut })
-             .to(itm, { duration: 3,                scaleY: 1.3, ease: Elastic.easeOut.config(1.1, 0.1) })
-        })
+      gsap.to(q(".icon")[0], {
+        duration: 0.3,
+        force3D: true,
+        scale: 0.6,
+        ease: Quint.easeOut
+      })
     }
 
     return (
-        <div style={{
+        <div 
+          style={{
             width: size,
             height: size,
             backgroundColor: color
         }}>
-            <div ref={el} style={{ filter: "url(svgFilters.svg#goo)" }}>
+            <div ref={el} style={{ filter: "url(svgFilters.svg#shadowed-goo)" }}>
                 {buttons.map((itm, i) => (
-                    <div key={i} style={{
+                    <div 
+                      key={i} 
+                      style={{
                         width: btnSize,
                         height: btnSize,
                         position: "absolute",
@@ -69,7 +85,9 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
                         left: btnPosition,
                         transform: `rotate(${startAngle+(slice*i)}deg)`
                     }}>
-                        <button className="btn" style={{
+                        <button 
+                          className="btn" 
+                          style={{
                             borderRadius: "50%",
                             width: btnSize,
                             height: btnSize,
@@ -79,13 +97,16 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
                             position: "absolute",
                             cursor: "pointer",
                         }}>
-            
+                            <FontAwesomeIcon icon={itm.icon} size="lg" color="#e5d2b8" style={{ transform: `rotate(${-startAngle-(slice*i)}deg)` }}/>
                         </button>
                     </div>
                 ))}
 
                 {[0, 1, 2, 3].map((i) => (
-                    <div className="bounce" key={i} style={{
+                    <div 
+                      className="bounce" 
+                      key={i} 
+                      style={{
                         position: "absolute",
                         borderRadius: "50%",
                         width: btnSize,
@@ -97,7 +118,8 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
                     }}/>
                 ))}
                 
-                <button style={{
+                <button 
+                  style={{
                     cursor: "pointer",
                     borderRadius: "50%",
                     width: btnSize,
@@ -108,8 +130,12 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
                     position: "absolute",
                     top: btnPosition,
                     left: btnPosition
-                }} onClick={() => isOpen ? close() : open() }>
-
+                  }}
+                  //onClick={() => isOpen ? close() : open() }
+                  onMouseUp={mouseUp}
+                  onMouseDown={mouseDown}
+                >
+                    <FontAwesomeIcon className="icon" icon={faPlus} size="2x" color="#e5d2b8" />
                 </button>
             </div>
         </div>
