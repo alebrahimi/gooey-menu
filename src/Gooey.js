@@ -6,45 +6,74 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngle = 0, buttons }){
-    const [isOpen, setIsOpen] = useState(false)
+    //const [isOpen, setIsOpen] = useState(false)
+
+    var isOpen = false
 
     const btnPosition = size/2 - btnSize/2
 
     const el = useRef()
     const q = gsap.utils.selector(el)
 
-    const toggle = () => {
+    const open = () => {
 
       gsap.to(q(".icon")[0], {
         duration: 0.3,
         force3D: true,
-        rotate: isOpen ? 45 : 0,
+        rotate: 45,
         ease: Quint.easeIn
       })
 
       q(".btn").forEach((itm, i) => {
         gsap.to(itm, {
             duration: 0.7,
-            delay: i*0.1,
+            delay: i*0.08,
             force3D: true,
-            x: isOpen ? distance || btnPosition : 0,
-            ease: Quad.easeInOut
+            x: distance || btnPosition,
+            ease: Quint.easeInOut,
         })
       })
 
       q(".bounce").forEach((itm, i) => {
-          var t = gsap.timeline({ delay: i*0.1 })
 
-          t.to(itm, { duration: 0.2, scaleX: isOpen ? 1 : 1.3, scaleY: isOpen ? 1.5 : 1,   ease: Quad.easeInOut })
-          .to(itm, { duration: 0.15,                           scaleY: isOpen ? 1.2 : 1.5, ease: Quad.easeInOut })
-          .to(itm, { duration: 3,                              scaleY: isOpen ? 1 : 1.3,   ease: Elastic.easeOut.config(1.1, 0.2) })
+          var t = gsap.timeline({ delay: i*0.08 })
+
+          t.to(itm, { duration: 0.2, scaleX: 1, scaleY: 1.5, ease: Quad.easeInOut })
+           .to(itm, { duration: 0.15,           scaleY: 1.2, ease: Quad.easeInOut })
+           .to(itm, { duration: 3,              scaleY: 1 ,  ease: Elastic.easeOut.config(1.1, 0.2) })
       })
 
     }
 
-    useEffect(() => {
-      toggle()
-    }, [isOpen])
+    const close = () => {
+
+      gsap.to(q(".icon")[0], {
+        duration: 0.3,
+        force3D: true,
+        rotate: 0,
+        ease: Quint.easeIn
+      })
+
+      q(".btn").forEach((itm, i) => {
+        gsap.to(itm, {
+            duration: 0.3,
+            delay: i*0.08,
+            force3D: true,
+            x: 0,
+            ease: Quint.easeIn,
+        })
+      })
+
+      q(".bounce").forEach((itm, i) => {
+
+          var t = gsap.timeline({ delay: i*0.08 })
+
+          t.to(itm, { duration: 0.2, scaleX: 1.3, scaleY: 1,   ease: Quad.easeInOut })
+           .to(itm, { duration: 0.15,             scaleY: 1.5, ease: Quad.easeInOut })
+           .to(itm, { duration: 3,                scaleY: 1.3, ease: Elastic.easeOut.config(1.1, 0.2) })
+      })
+
+    }
 
     const mouseUp = () => {
       gsap.to(q(".icon")[0], {
@@ -55,8 +84,11 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
       })
     }
 
-    const mouseDown = () => {
-      setIsOpen((prev) => !prev)
+    const mouseDown = (e) => {
+      //setIsOpen((prev) => !prev)
+      isOpen = !isOpen
+
+      isOpen ? open() : close()
 
       gsap.to(q(".icon")[0], {
         duration: 0.3,
@@ -97,7 +129,7 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
                             position: "absolute",
                             cursor: "pointer",
                         }}>
-                            <FontAwesomeIcon icon={itm.icon} size="lg" color="#e5d2b8" style={{ transform: `rotate(${-startAngle-(slice*i)}deg)` }}/>
+                            <FontAwesomeIcon icon={itm.icon} size="lg" color="#e5d2b8" style={{ transform: `rotate(${-(startAngle+(slice*i))}deg)` }}/>
                         </button>
                     </div>
                 ))}
@@ -133,9 +165,10 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
                   }}
                   //onClick={() => isOpen ? close() : open() }
                   onMouseUp={mouseUp}
+                  onMouseLeave={mouseUp}
                   onMouseDown={mouseDown}
                 >
-                    <FontAwesomeIcon className="icon" icon={faPlus} size="2x" color="#e5d2b8" />
+                    <FontAwesomeIcon className="icon" icon={faPlus} size="2x" color={isOpen ? "red" : "#e5d2b8"} />
                 </button>
             </div>
         </div>
