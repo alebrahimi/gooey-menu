@@ -1,17 +1,17 @@
 import Gooey from './Gooey';
 
-import { faUser, faBuilding, faBook, faCalendarAlt, faFrog, faFish, faCat, faCrow, faHorse, faHippo, faSpider, faOtter, faDragon } from '@fortawesome/free-solid-svg-icons'
+import { faFrog, faFish, faCat, faCrow, faHorse, faHippo, faSpider, faOtter, faDragon } from '@fortawesome/free-solid-svg-icons'
 
 function App() {
   return (
     <Gooey 
-      size={400}
-      //color="#ddc5c5"
-      btnSize={50}
-      btnColor="#5e5e5e"
-      distance={100}
-      slice={50}
-      startAngle={15}
+      size={600}
+      //color="#e27258"
+      btnSize={70}
+      btnColor="#8db69d"
+      distance={115}
+      slice={45}
+      startAngle={0}
       buttons={[
         {
           title: "",
@@ -32,6 +32,26 @@ function App() {
           title: "",
           color: "red",
           icon: faHippo,
+        },
+        {
+          title: "",
+          color: "red",
+          icon: faHorse,
+        },
+        {
+          title: "",
+          color: "red",
+          icon: faCrow,
+        },
+        {
+          title: "",
+          color: "red",
+          icon: faOtter,
+        },
+        {
+          title: "",
+          color: "red",
+          icon: faSpider,
         },
       ]}
     />

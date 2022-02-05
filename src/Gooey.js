@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from"react"
 
-import { gsap, Quad, Quint, Elastic } from"gsap"
+import { gsap, Quad, Quint, Elastic, Back } from"gsap"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -26,11 +26,11 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
 
       q(".btn").forEach((itm, i) => {
         gsap.to(itm, {
-            duration: 0.7,
+            duration: 1.1,
             delay: i*0.08,
             force3D: true,
             x: distance || btnPosition,
-            ease: Quint.easeInOut,
+            ease: Back.easeOut,
         })
       })
 
@@ -48,7 +48,7 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
     const close = () => {
 
       gsap.to(q(".icon")[0], {
-        duration: 0.3,
+        duration: 0.5,
         force3D: true,
         rotate: 0,
         ease: Quint.easeIn
@@ -60,7 +60,7 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
             delay: i*0.08,
             force3D: true,
             x: 0,
-            ease: Quint.easeIn,
+            ease: Back.easeIn,
         })
       })
 
@@ -129,7 +129,7 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
                             position: "absolute",
                             cursor: "pointer",
                         }}>
-                            <FontAwesomeIcon icon={itm.icon} size="lg" color="#e5d2b8" style={{ transform: `rotate(${-(startAngle+(slice*i))}deg)` }}/>
+                            <FontAwesomeIcon icon={itm.icon} size="2x" color="whitesmoke" style={{ transform: `rotate(${-(startAngle+(slice*i))}deg)` }}/>
                         </button>
                     </div>
                 ))}
@@ -168,7 +168,7 @@ function Gooey({ size, color, btnSize, btnColor, distance, slice = 50, startAngl
                   onMouseLeave={mouseUp}
                   onMouseDown={mouseDown}
                 >
-                    <FontAwesomeIcon className="icon" icon={faPlus} size="2x" color={isOpen ? "red" : "#e5d2b8"} />
+                    <FontAwesomeIcon className="icon" icon={faPlus} size="2x" color="whitesmoke" />
                 </button>
             </div>
         </div>
